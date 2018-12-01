@@ -48,7 +48,7 @@ def editMenuItem(restaurant_id, menu_id):
         flash("Menu Item has been edited")
         return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
     else:
-        return render_template('editmenuitem.html', restaurant_id=restaurant_id, menu_id=menu_id, item=editedItem)
+        return render_template('editmenuitem.html', restaurant_id=restaurant_id, item=editedItem)
 # Task 3: Create a route for deleteMenuItem function here
 
 
@@ -65,10 +65,17 @@ def deleteMenuItem(restaurant_id, menu_id):
         return render_template('deletemenuitem.html', item=itemToDelete)
 
 @app.route('/restaurants/<int:restaurant_id>/JSON')
-def restaurnatMenuJSON(restaurant_id):
-    restaurant = session.query(Restaurant).filter_by(id = restaurant_id).one()
-    items = session.query(MenuItem).filter_by(restaurant_id = restaurant_id).all()
-    return jsonify(MenuItems =([i.serialize for i in items]))
+def restaurantMenuJSON(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    items = session.query(MenuItem).filter_by(
+        restaurant_id=restaurant_id).all()
+    return jsonify(MenuItems=[i.serialize for i in items])
+
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/JSON')
+def menuItemJSON(restaurant_id, menu_id):
+    menuItem = session.query(MenuItem).filter_by(id=menu_id).one()
+    return jsonify(MenuItem=menuItem.serialize)
+
 
 if __name__ == '__main__':
     app.secret_key ='super_secret_key'
